@@ -56,6 +56,8 @@ typedef void(^MXClickHandler)(NSInteger index);
 @end
 
 @interface MXScrollView ()<UIScrollViewDelegate>
+@property (strong, nonatomic) UIScrollView *scrollView;
+@property (strong, nonatomic) UIPageControl *pageControl;
 @property (assign, nonatomic) CGRect contentRect;
 @property (assign, nonatomic) NSUInteger originalImageCount;
 @property (assign, nonatomic) NSInteger imageCount;
@@ -76,12 +78,7 @@ typedef void(^MXClickHandler)(NSInteger index);
     if (self = [super initWithFrame:frame]) {
         self.contentRect = frame;
         self.delay = delay;
-        self.showsHorizontalScrollIndicator = NO;
-        self.showsVerticalScrollIndicator = NO;
-        self.pagingEnabled = YES;
-        self.delegate = self;
-        self.pageControl = [[UIPageControl alloc]initWithFrame:CGRectMake(0, self.y+self.height-MXPageControlHeight, kScreenWidth, MXPageControlHeight)];
-        self.pageControl.hidesForSinglePage = YES;
+        [self setupScrollView];
     }
     return self;
 }
@@ -91,6 +88,19 @@ typedef void(^MXClickHandler)(NSInteger index);
     view.mImageArray = [[NSMutableArray alloc] initWithArray:contents];
     [view initContents];
     return view;
+}
+
+- (void)setupScrollView {
+    self.scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, self.width, self.height)];
+    self.scrollView.showsHorizontalScrollIndicator = NO;
+    self.scrollView.showsVerticalScrollIndicator = NO;
+    self.scrollView.pagingEnabled = YES;
+    self.scrollView.delegate = self;
+    [self addSubview:self.scrollView];
+    
+    self.pageControl = [[UIPageControl alloc]initWithFrame:CGRectMake(0, self.height-MXPageControlHeight, kScreenWidth, MXPageControlHeight)];
+    self.pageControl.hidesForSinglePage = YES;
+    [self addSubview:self.pageControl];
 }
 
 - (void)setContents:(NSArray <NSString*>*)contents {
@@ -116,7 +126,7 @@ typedef void(^MXClickHandler)(NSInteger index);
         [self.mImageArray insertObject:lastImageName atIndex:_mImageArray.count];
     }
     self.imageCount = self.mImageArray.count;
-    self.contentSize = CGSizeMake(self.width*self.mImageArray.count, self.height);
+    self.scrollView.contentSize = CGSizeMake(self.width*self.mImageArray.count, self.height);
 }
 
 - (void)clearViewsTagAbove:(NSInteger)tag {
@@ -151,14 +161,14 @@ typedef void(^MXClickHandler)(NSInteger index);
             }
             imageView.handler = ^(NSInteger index) {
                 @MXStrongObj(self);
-                if ([self.mxDelegate respondsToSelector:@selector(clickImageIndex:)]) {
-                    [self.mxDelegate clickImageIndex:index];
+                if ([self.delegate respondsToSelector:@selector(clickImageIndex:)]) {
+                    [self.delegate clickImageIndex:index];
                 }
                 if (self.clickHandler) {
                     self.clickHandler(index);
                 }
             };
-            [self addSubview:imageView];
+            [self.scrollView addSubview:imageView];
         }
     }
 }
@@ -167,7 +177,7 @@ typedef void(^MXClickHandler)(NSInteger index);
     if (self.mImageArray.count > 1 && self.delay > 0) {
         //设置好滚动视图，启动定时器
         if (!self.timer) {
-            self.contentOffset = CGPointMake(self.width, 0);
+            self.scrollView.contentOffset = CGPointMake(self.width, 0);
             self.timer = [self createTimer];
             [[NSRunLoop mainRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
         }
@@ -182,17 +192,17 @@ typedef void(^MXClickHandler)(NSInteger index);
 
 - (void)autoScrollAd {
     NSInteger page = 0;
-    NSInteger x = self.contentOffset.x/self.width;
+    NSInteger x = self.scrollView.contentOffset.x/self.width;
     page = x - 1;
     //显示最后一张，移动offset到最左边
     if (x == _imageCount - 2) {
-        self.contentOffset = CGPointZero;
+        self.scrollView.contentOffset = CGPointZero;
         x = 0;
         page = -1;
     }
     //滚动到下一页
     [UIView animateWithDuration:0.375 animations:^{
-        self.contentOffset = CGPointMake((x+1)*self.width, 0);
+        self.scrollView.contentOffset = CGPointMake((x+1)*self.width, 0);
     } completion:^(BOOL finished) {
         self.pageControl.currentPage = page + 1;
     }];
@@ -246,6 +256,10 @@ typedef void(^MXClickHandler)(NSInteger index);
 #pragma mark setter
 - (void)setDelay:(CGFloat)delay {
     _delay = delay > 0 ? delay : MXDefaultDelay;
+}
+
+- (void)setHidePageControl:(BOOL)hidePageControl {
+    self.pageControl.hidden = hidePageControl;
 }
 
 /*
