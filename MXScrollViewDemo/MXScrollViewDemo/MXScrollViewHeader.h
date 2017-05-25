@@ -22,4 +22,7 @@
 
 #define MXDefaultDelay 3
 
+#define MXWeakObj(o) autoreleasepool{} __weak typeof(o) o##Weak = o;
+#define MXStrongObj(o) autoreleasepool{} __strong typeof(o) o = o##Weak;
+
 #endif /* MXScrollViewHeader_h */

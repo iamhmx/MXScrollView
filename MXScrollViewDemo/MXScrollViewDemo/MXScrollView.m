@@ -133,6 +133,7 @@ typedef void(^MXClickHandler)(NSInteger index);
 }
 
 - (void)setupImageViews {
+    @MXWeakObj(self);
     for (NSInteger i = 0; i < self.imageCount; i++) {
         @autoreleasepool {
             MXImageView *imageView = [[MXImageView alloc]initWithFrame:CGRectMake(self.width*i, 0, self.width, self.height) imageURL:_mImageArray[i] placeholderImage:self.placeholderImage];
@@ -149,7 +150,13 @@ typedef void(^MXClickHandler)(NSInteger index);
                 imageView.actionTag = i;
             }
             imageView.handler = ^(NSInteger index) {
-                [_mxDelegate clickImageIndex:index];
+                @MXStrongObj(self);
+                if ([self.mxDelegate respondsToSelector:@selector(clickImageIndex:)]) {
+                    [self.mxDelegate clickImageIndex:index];
+                }
+                if (self.clickHandler) {
+                    self.clickHandler(index);
+                }
             };
             [self addSubview:imageView];
         }

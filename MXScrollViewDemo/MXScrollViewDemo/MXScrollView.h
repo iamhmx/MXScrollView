@@ -15,12 +15,15 @@
 
 @end
 
+typedef void(^MXClickImageHandler)(NSInteger index);
+
 @interface MXScrollView : UIScrollView
 @property (strong, nonatomic) UIPageControl *pageControl;
 @property (strong, nonatomic) NSArray <NSString*>*contents;
 @property (assign, nonatomic) CGFloat delay;
 @property (weak, nonatomic) id <MXScrollViewDelegate> mxDelegate;
 @property (strong, nonatomic) UIImage *placeholderImage;
+@property (copy, nonatomic) MXClickImageHandler clickHandler;
 
 - (instancetype)initWithFrame:(CGRect)frame withScrollDelay:(CGFloat)delay;
 - (instancetype)initWithFrame:(CGRect)frame withContents:(NSArray<NSString*>*)contents andScrollDelay:(CGFloat)delay;
