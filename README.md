@@ -17,15 +17,13 @@
     //初始化（位置，数据源，自动滚动间隔）
     MXScrollView *mxScrollView = [[MXScrollView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 200) withContents:imageUrls andScrollDelay:3.5];
     //方法一：设置代理并实现方法
-    //mxScrollView.mxDelegate = self;
+    //mxScrollView.delegate = self;
     //方法二：设置回调Block
     mxScrollView.clickHandler = ^(NSInteger index) {
         NSLog(@"图片index：%ld",index);
     };
     //添加视图
     [self.view addSubview:mxScrollView];
-    //添加pageControl
-    [self.view addSubview:mxScrollView.pageControl];
 }
 
 - (void)clickImageIndex:(NSInteger)index {
