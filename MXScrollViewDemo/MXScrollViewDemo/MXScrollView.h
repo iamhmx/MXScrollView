@@ -27,6 +27,8 @@ typedef void(^MXClickImageHandler)(NSInteger index);
 @property (copy, nonatomic)   MXClickImageHandler clickHandler;
 //是否显示pageControl，默认显示
 @property (assign, nonatomic) BOOL hidePageControl;
+//渐变动画，默认关闭
+@property (assign, nonatomic) BOOL fadeInOutAnimation;
 
 - (instancetype)initWithFrame:(CGRect)frame withScrollDelay:(CGFloat)delay;
 - (instancetype)initWithFrame:(CGRect)frame withContents:(NSArray<NSString*>*)contents andScrollDelay:(CGFloat)delay;

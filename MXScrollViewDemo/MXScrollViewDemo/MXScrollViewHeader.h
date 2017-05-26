@@ -21,6 +21,7 @@
 #define MXImageViewTagBase  100
 
 #define MXDefaultDelay 3
+#define MXAutoScrollDuration 0.5
 
 #define MXWeakObj(o) autoreleasepool{} __weak typeof(o) o##Weak = o;
 #define MXStrongObj(o) autoreleasepool{} __strong typeof(o) o = o##Weak;

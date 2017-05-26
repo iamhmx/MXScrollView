@@ -19,6 +19,9 @@ typedef void(^MXClickHandler)(NSInteger index);
 @property (copy, nonatomic) NSString *imageUrl;
 @property (strong, nonatomic) UIImage *placeholder;
 @property (copy, nonatomic) MXClickHandler handler;
+@property (strong, nonatomic) UIView *coverView;
+@property (assign, nonatomic) BOOL hideCover;
+@property (assign, nonatomic) CGFloat coverViewAlpha;
 @end
 
 @implementation MXImageView
@@ -32,11 +35,26 @@ typedef void(^MXClickHandler)(NSInteger index);
         self.imageView.backgroundColor = [UIColor whiteColor];
         [self.imageView sd_setImageWithURL:[NSURL URLWithString:url] placeholderImage:placeholder];
         [self addSubview:self.imageView];
+        
+        self.coverView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
+        self.coverView.backgroundColor = [UIColor colorWithRed:170/255.0 green:170/255.0 blue:170/255.0 alpha:0.9];
+        self.coverView.alpha = 0;
+        [self.imageView addSubview:self.coverView];
+        
         self.control = [[UIControl alloc]initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
         [self.control addTarget:self action:@selector(imageClickAction:) forControlEvents:UIControlEventTouchUpInside];
         [self.imageView addSubview:self.control];
+        
     }
     return self;
+}
+
+- (void)setHideCover:(BOOL)hideCover {
+    self.coverView.alpha = hideCover?0:1;
+}
+
+- (void)setCoverViewAlpha:(CGFloat)coverViewAlpha {
+    self.coverView.alpha = coverViewAlpha;
 }
 
 - (void)setActionTag:(NSInteger)actionTag {
@@ -65,6 +83,13 @@ typedef void(^MXClickHandler)(NSInteger index);
 @property (strong, nonatomic) NSTimer *timer;
 @property (assign, nonatomic) BOOL manual;
 @property (strong, nonatomic) NSMutableArray *mImageArray;
+@property (strong, nonatomic) NSMutableArray *imageViewArray;
+@property (strong, nonatomic) MXImageView *currentImage;
+@property (strong, nonatomic) MXImageView *preImage;
+@property (strong, nonatomic) MXImageView *nextImage;
+//上一次scrollView的偏移量
+@property (assign, nonatomic) NSInteger lastX;
+
 //基于父视图坐标
 @property (assign, nonatomic) CGFloat x;
 @property (assign, nonatomic) CGFloat y;
@@ -127,6 +152,10 @@ typedef void(^MXClickHandler)(NSInteger index);
     }
     self.imageCount = self.mImageArray.count;
     self.scrollView.contentSize = CGSizeMake(self.width*self.mImageArray.count, self.height);
+    if (self.mImageArray.count > 1) {
+        self.scrollView.contentOffset = CGPointMake(self.width, 0);
+        self.lastX = self.width;
+    }
 }
 
 - (void)clearViewsTagAbove:(NSInteger)tag {
@@ -144,6 +173,7 @@ typedef void(^MXClickHandler)(NSInteger index);
 
 - (void)setupImageViews {
     @MXWeakObj(self);
+    self.imageViewArray = [NSMutableArray new];
     for (NSInteger i = 0; i < self.imageCount; i++) {
         @autoreleasepool {
             MXImageView *imageView = [[MXImageView alloc]initWithFrame:CGRectMake(self.width*i, 0, self.width, self.height) imageURL:_mImageArray[i] placeholderImage:self.placeholderImage];
@@ -169,15 +199,16 @@ typedef void(^MXClickHandler)(NSInteger index);
                 }
             };
             [self.scrollView addSubview:imageView];
+            [self.imageViewArray addObject:imageView];
         }
     }
+    [self resetThreeImages];
 }
 
 - (void)setupTimer {
     if (self.mImageArray.count > 1 && self.delay > 0) {
         //设置好滚动视图，启动定时器
         if (!self.timer) {
-            self.scrollView.contentOffset = CGPointMake(self.width, 0);
             self.timer = [self createTimer];
             [[NSRunLoop mainRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
         }
@@ -191,6 +222,7 @@ typedef void(^MXClickHandler)(NSInteger index);
 }
 
 - (void)autoScrollAd {
+    @MXWeakObj(self);
     NSInteger page = 0;
     NSInteger x = self.scrollView.contentOffset.x/self.width;
     page = x - 1;
@@ -200,12 +232,58 @@ typedef void(^MXClickHandler)(NSInteger index);
         x = 0;
         page = -1;
     }
+    //在滚动前获取三张图片
+    [self resetThreeImages];
     //滚动到下一页
-    [UIView animateWithDuration:0.375 animations:^{
+    [UIView animateWithDuration:MXAutoScrollDuration animations:^{
+        @MXStrongObj(self);
         self.scrollView.contentOffset = CGPointMake((x+1)*self.width, 0);
+        if (self.fadeInOutAnimation) {
+            //自动滚动只需要考虑当前页和下一页
+            self.currentImage.hideCover = NO;
+            self.nextImage.hideCover = YES;
+        }
     } completion:^(BOOL finished) {
+        @MXStrongObj(self);
         self.pageControl.currentPage = page + 1;
+        //衔接自动滚动后手动滑动
+        self.lastX = self.scrollView.contentOffset.x;
+        [self resetThreeImages];
     }];
+}
+
+- (void)resetThreeImages {
+    NSInteger offX = self.scrollView.contentOffset.x/self.width;
+    /*if (offX == 0) {
+     if (!self.manual) {
+     //如果是自动滚动，显示最后一张图片时会设置contentOffset为0，所以offX为0只有下面一种情况
+     self.currentImage = self.imageViewArray[0];
+     self.nextImage = self.imageViewArray[1];
+     } else {
+     self.currentImage = self.imageViewArray[_imageCount-2];
+     self.preImage = self.imageViewArray[_imageCount-3];
+     self.nextImage = self.imageViewArray[_imageCount-1];
+     }
+     } else if (offX == _imageCount-1) {
+     self.currentImage = self.imageViewArray[1];
+     self.preImage = self.imageViewArray[0];
+     self.nextImage = self.imageViewArray[2];
+     } else {
+     self.currentImage = self.imageViewArray[offX];
+     self.preImage = self.imageViewArray[offX-1];
+     self.nextImage = self.imageViewArray[offX+1];
+     }*/
+    if (self.imageViewArray.count > 2) {
+        self.currentImage = self.imageViewArray[offX];
+        if (offX > 0) {
+            self.preImage = self.imageViewArray[offX-1];
+        }
+        self.nextImage = self.imageViewArray[offX+1];
+        if (self.fadeInOutAnimation) {
+            self.preImage.hideCover = self.nextImage.hideCover = NO;
+            self.currentImage.hideCover = YES;
+        }
+    }
 }
 
 #pragma mark scrollView代理方法
@@ -222,6 +300,8 @@ typedef void(^MXClickHandler)(NSInteger index);
         page = 0;
     }
     self.pageControl.currentPage = page;
+    self.lastX = scrollView.contentOffset.x;
+    [self resetThreeImages];
     if (self.manual && self.delay > 0) {
         self.timer = [self createTimer];
         self.manual = NO;
@@ -233,6 +313,21 @@ typedef void(^MXClickHandler)(NSInteger index);
     self.manual = YES;
     if (self.timer != nil) {
         [self.timer invalidate];
+    }
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    NSLog(@"last = %ld, offset = %ld", self.lastX, (NSInteger)scrollView.contentOffset.x);
+    //相对于上次contentOffset.x的滚动距离（0~self.width）
+    NSInteger scrollDistance = labs(self.lastX - (NSInteger)scrollView.contentOffset.x);
+    scrollDistance = MIN(scrollDistance, self.width);
+    NSLog(@"scrollDistance = %ld",scrollDistance);
+    
+    CGFloat alpha = scrollDistance / self.width;
+    NSLog(@"alpha = %.1f",alpha);
+    if (self.fadeInOutAnimation) {
+        self.currentImage.coverViewAlpha = alpha;
+        self.preImage.coverViewAlpha = self.nextImage.coverViewAlpha = 1-alpha;
     }
 }
 
