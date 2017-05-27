@@ -7,6 +7,10 @@
 * 旋转<br>
    ![旋转](https://github.com/iamhmx/MXScrollView/blob/master/MXScrollViewDemo/screenshots/rotate.gif)
    <br>
+   
+* 缩放<br>
+   ![缩放](https://github.com/iamhmx/MXScrollView/blob/master/MXScrollViewDemo/screenshots/scale.gif)
+   <br>
 ## 使用说明
 * 添加文件
     * 将MXScrollViewHeader.h、MXScrollView.h、MXScrollView.m添加到项目中
@@ -35,16 +39,24 @@
     }];*/
 
     //设置动画类型
-    mxScrollView.animationType = MXImageAnimationNone;
-
+    //渐变
+    //mxScrollView.animationType = MXImageAnimationFadeInOut;
+    
+    //选择
+    //mxScrollView.animationType = MXImageAnimationRotation;
+    
+    //缩放
+    mxScrollView.animationType = MXImageAnimationScale;
+    mxScrollView.scaleRatio = 0.5;
+    
     //方法一：设置代理并实现方法
     //mxScrollView.delegate = self;
-
+    
     //方法二：设置回调Block
     mxScrollView.clickHandler = ^(NSInteger index) {
         NSLog(@"图片index：%ld",index);
     };
-
+    
     [self.view addSubview:mxScrollView];
 }
 
