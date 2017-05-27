@@ -18,15 +18,28 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor lightGrayColor];
+    
+    /*初始化一：已知图片数据*/
     MXScrollView *mxScrollView = [[MXScrollView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 200) withContents:self.imageUrls andScrollDelay:3.5];
-    //设置动画
-    mxScrollView.animationType = MXImageAnimationRotation;
+    
+    /*初始化二：不知图片数据，数据由网络请求而来，更常见*/
+    /*MXScrollView *mxScrollView = [[MXScrollView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 200) withScrollDelay:3.5];
+    //请求到数据，设置图片
+    [self requestDataFromNet:^(id data) {
+        [mxScrollView setContents:data];
+    }];*/
+    
+    //设置动画类型
+    mxScrollView.animationType = MXImageAnimationNone;
+    
     //方法一：设置代理并实现方法
     //mxScrollView.delegate = self;
+    
     //方法二：设置回调Block
     mxScrollView.clickHandler = ^(NSInteger index) {
         NSLog(@"图片index：%ld",index);
     };
+    
     [self.view addSubview:mxScrollView];
 }
 
