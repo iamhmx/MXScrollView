@@ -11,6 +11,18 @@
 * 缩放<br>
    ![缩放](https://github.com/iamhmx/MXScrollView/blob/master/MXScrollViewDemo/screenshots/scale.gif)
    <br>
+   
+* 上升<br>
+   ![上升](https://github.com/iamhmx/MXScrollView/blob/master/MXScrollViewDemo/screenshots/up.gif)
+   <br>
+   
+* 下降<br>
+   ![下降](https://github.com/iamhmx/MXScrollView/blob/master/MXScrollViewDemo/screenshots/down.gif)
+   <br>
+   
+* 毛玻璃<br>
+   ![毛玻璃](https://github.com/iamhmx/MXScrollView/blob/master/MXScrollViewDemo/screenshots/blur.gif)
+   <br>   
 ## 使用说明
 * 添加文件
     * 将MXScrollViewHeader.h、MXScrollView.h、MXScrollView.m添加到项目中
@@ -42,12 +54,18 @@
     //渐变
     //mxScrollView.animationType = MXImageAnimationFadeInOut;
     
-    //选择
-    //mxScrollView.animationType = MXImageAnimationRotation;
+    //旋转
+    mxScrollView.animationType = MXImageAnimationRotation;
     
     //缩放
-    mxScrollView.animationType = MXImageAnimationScale;
-    mxScrollView.scaleRatio = 0.5;
+    //mxScrollView.animationType = MXImageAnimationScale;
+    //mxScrollView.scaleRatio = 0.5;
+    
+    //mxScrollView.animationType = MXImageAnimationUp;
+    
+    //mxScrollView.animationType = MXImageAnimationDown;
+    
+    mxScrollView.animationType = MXImageAnimationBlur;
     
     //方法一：设置代理并实现方法
     //mxScrollView.delegate = self;
