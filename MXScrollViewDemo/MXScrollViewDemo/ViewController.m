@@ -34,7 +34,7 @@
     //mxScrollView.animationType = MXImageAnimationFadeInOut;
     
     //旋转
-    mxScrollView.animationType = MXImageAnimationRotation;
+    //mxScrollView.animationType = MXImageAnimationRotation;
     
     //缩放
     //mxScrollView.animationType = MXImageAnimationScale;
@@ -44,7 +44,7 @@
     
     //mxScrollView.animationType = MXImageAnimationDown;
     
-    mxScrollView.animationType = MXImageAnimationBlur;
+    //mxScrollView.animationType = MXImageAnimationBlur;
     
     //方法一：设置代理并实现方法
     //mxScrollView.delegate = self;
