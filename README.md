@@ -1,5 +1,12 @@
 # MXScrollView
 循环滚动视图(支持点击事件、自动滚动、多种动画)
+## 效果示例
+* 渐变<br>
+   ![渐变](https://github.com/iamhmx/MXScrollView/blob/master/MXScrollViewDemo/screenshots/fade.gif)
+
+* 旋转<br>
+   ![旋转](https://github.com/iamhmx/MXScrollView/blob/master/MXScrollViewDemo/screenshots/rotate.gif)
+   <br>
 ## 使用说明
 * 添加文件
     * 将MXScrollViewHeader.h、MXScrollView.h、MXScrollView.m添加到项目中
