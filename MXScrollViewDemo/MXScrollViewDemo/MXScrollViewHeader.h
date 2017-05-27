@@ -26,4 +26,18 @@
 #define MXWeakObj(o) autoreleasepool{} __weak typeof(o) o##Weak = o;
 #define MXStrongObj(o) autoreleasepool{} __strong typeof(o) o = o##Weak;
 
+
+/**
+ 动画类型
+
+ - MXImageAnimationNone: 默认无动画
+ - MXImageAnimationFadeInOut: 渐变
+ - MXImageAnimationRotation: 旋转
+ */
+typedef NS_ENUM(NSInteger, MXImageAnimation) {
+    MXImageAnimationNone,
+    MXImageAnimationFadeInOut,
+    MXImageAnimationRotation
+};
+
 #endif /* MXScrollViewHeader_h */

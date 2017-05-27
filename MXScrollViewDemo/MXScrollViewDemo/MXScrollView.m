@@ -7,7 +7,6 @@
 //
 
 #import "MXScrollView.h"
-#import "MXScrollViewHeader.h"
 #import "UIImageView+WebCache.h"
 
 typedef void(^MXClickHandler)(NSInteger index);
@@ -44,7 +43,6 @@ typedef void(^MXClickHandler)(NSInteger index);
         self.control = [[UIControl alloc]initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
         [self.control addTarget:self action:@selector(imageClickAction:) forControlEvents:UIControlEventTouchUpInside];
         [self.imageView addSubview:self.control];
-        
     }
     return self;
 }
@@ -89,7 +87,8 @@ typedef void(^MXClickHandler)(NSInteger index);
 @property (strong, nonatomic) MXImageView *nextImage;
 //上一次scrollView的偏移量
 @property (assign, nonatomic) NSInteger lastX;
-
+//滚动方向，← or →
+@property (assign, nonatomic) BOOL scrollLeft;
 //基于父视图坐标
 @property (assign, nonatomic) CGFloat x;
 @property (assign, nonatomic) CGFloat y;
@@ -238,10 +237,13 @@ typedef void(^MXClickHandler)(NSInteger index);
     [UIView animateWithDuration:MXAutoScrollDuration animations:^{
         @MXStrongObj(self);
         self.scrollView.contentOffset = CGPointMake((x+1)*self.width, 0);
-        if (self.fadeInOutAnimation) {
+        if (self.animationType == MXImageAnimationFadeInOut) {
             //自动滚动只需要考虑当前页和下一页
             self.currentImage.hideCover = NO;
             self.nextImage.hideCover = YES;
+        } else if (self.animationType == MXImageAnimationRotation) {
+            //自动滚动只需要考虑向左，逆时针方向
+            self.currentImage.transform = CGAffineTransformMakeRotation(-M_PI_4);
         }
     } completion:^(BOOL finished) {
         @MXStrongObj(self);
@@ -254,34 +256,22 @@ typedef void(^MXClickHandler)(NSInteger index);
 
 - (void)resetThreeImages {
     NSInteger offX = self.scrollView.contentOffset.x/self.width;
-    /*if (offX == 0) {
-     if (!self.manual) {
-     //如果是自动滚动，显示最后一张图片时会设置contentOffset为0，所以offX为0只有下面一种情况
-     self.currentImage = self.imageViewArray[0];
-     self.nextImage = self.imageViewArray[1];
-     } else {
-     self.currentImage = self.imageViewArray[_imageCount-2];
-     self.preImage = self.imageViewArray[_imageCount-3];
-     self.nextImage = self.imageViewArray[_imageCount-1];
-     }
-     } else if (offX == _imageCount-1) {
-     self.currentImage = self.imageViewArray[1];
-     self.preImage = self.imageViewArray[0];
-     self.nextImage = self.imageViewArray[2];
-     } else {
-     self.currentImage = self.imageViewArray[offX];
-     self.preImage = self.imageViewArray[offX-1];
-     self.nextImage = self.imageViewArray[offX+1];
-     }*/
     if (self.imageViewArray.count > 2) {
         self.currentImage = self.imageViewArray[offX];
         if (offX > 0) {
             self.preImage = self.imageViewArray[offX-1];
         }
         self.nextImage = self.imageViewArray[offX+1];
-        if (self.fadeInOutAnimation) {
+        if (self.animationType == MXImageAnimationFadeInOut) {
             self.preImage.hideCover = self.nextImage.hideCover = NO;
             self.currentImage.hideCover = YES;
+        } else if (self.animationType == MXImageAnimationRotation) {
+            [self.scrollView bringSubviewToFront:self.currentImage];
+            self.currentImage.layer.shadowOffset = CGSizeMake(0, 0);
+            self.currentImage.layer.shadowColor = [UIColor blackColor].CGColor;
+            self.currentImage.layer.shadowOpacity = 0.8;
+            self.currentImage.layer.shadowRadius = 4;
+            self.currentImage.transform = self.preImage.transform = self.nextImage.transform = CGAffineTransformIdentity;
         }
     }
 }
@@ -325,13 +315,19 @@ typedef void(^MXClickHandler)(NSInteger index);
     
     CGFloat alpha = scrollDistance / self.width;
     NSLog(@"alpha = %.1f",alpha);
-    if (self.fadeInOutAnimation) {
+    if (self.animationType == MXImageAnimationFadeInOut) {
         self.currentImage.coverViewAlpha = alpha;
         self.preImage.coverViewAlpha = self.nextImage.coverViewAlpha = 1-alpha;
+    } else if (self.animationType == MXImageAnimationRotation) {
+        self.currentImage.transform = CGAffineTransformMakeRotation((self.scrollLeft?-1:1) * alpha * M_PI_4);
     }
 }
 
 #pragma mark getter
+- (BOOL)scrollLeft {
+    return self.lastX - (NSInteger)self.scrollView.contentOffset.x < 0;
+}
+
 - (CGFloat)x {
     return self.contentRect.origin.x;
 }
@@ -349,6 +345,11 @@ typedef void(^MXClickHandler)(NSInteger index);
 }
 
 #pragma mark setter
+- (void)setAnimationType:(MXImageAnimation)animationType {
+    _animationType = animationType;
+    [self resetThreeImages];
+}
+
 - (void)setDelay:(CGFloat)delay {
     _delay = delay > 0 ? delay : MXDefaultDelay;
 }
