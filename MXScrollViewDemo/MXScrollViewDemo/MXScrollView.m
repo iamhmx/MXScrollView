@@ -244,6 +244,9 @@ typedef void(^MXClickHandler)(NSInteger index);
         } else if (self.animationType == MXImageAnimationRotation) {
             //自动滚动只需要考虑向左，逆时针方向
             self.currentImage.transform = CGAffineTransformMakeRotation(-M_PI_4);
+        } else if (self.animationType == MXImageAnimationScale) {
+            self.currentImage.transform = CGAffineTransformMakeScale(1 - self.scaleRatio, 1 - self.scaleRatio);
+            self.preImage.transform = self.nextImage.transform = CGAffineTransformMakeScale(1, 1);
         }
     } completion:^(BOOL finished) {
         @MXStrongObj(self);
@@ -272,6 +275,9 @@ typedef void(^MXClickHandler)(NSInteger index);
             self.currentImage.layer.shadowOpacity = 0.8;
             self.currentImage.layer.shadowRadius = 4;
             self.currentImage.transform = self.preImage.transform = self.nextImage.transform = CGAffineTransformIdentity;
+        } else if (self.animationType == MXImageAnimationScale) {
+            self.currentImage.transform = CGAffineTransformIdentity;
+            self.preImage.transform = self.nextImage.transform = CGAffineTransformMakeScale(1 - self.scaleRatio, 1 - self.scaleRatio);
         }
     }
 }
@@ -313,13 +319,23 @@ typedef void(^MXClickHandler)(NSInteger index);
     scrollDistance = MIN(scrollDistance, self.width);
     NSLog(@"scrollDistance = %ld",scrollDistance);
     
-    CGFloat alpha = scrollDistance / self.width;
-    NSLog(@"alpha = %.1f",alpha);
-    if (self.animationType == MXImageAnimationFadeInOut) {
-        self.currentImage.coverViewAlpha = alpha;
-        self.preImage.coverViewAlpha = self.nextImage.coverViewAlpha = 1-alpha;
-    } else if (self.animationType == MXImageAnimationRotation) {
-        self.currentImage.transform = CGAffineTransformMakeRotation((self.scrollLeft?-1:1) * alpha * M_PI_4);
+    CGFloat ratio = scrollDistance / self.width;
+    NSLog(@"ratio = %.1f",ratio);
+    
+    switch (self.animationType) {
+        case MXImageAnimationFadeInOut:
+            self.currentImage.coverViewAlpha = ratio;
+            self.preImage.coverViewAlpha = self.nextImage.coverViewAlpha = 1-ratio;
+            break;
+            
+        case MXImageAnimationRotation:
+            self.currentImage.transform = CGAffineTransformMakeRotation((self.scrollLeft?-1:1) * ratio * M_PI_4);
+            
+        case MXImageAnimationScale:
+            self.currentImage.transform = CGAffineTransformMakeScale(1 - ratio * self.scaleRatio, 1 - ratio * self.scaleRatio);
+            self.preImage.transform = self.nextImage.transform = CGAffineTransformMakeScale((1 - self.scaleRatio) + ratio * self.scaleRatio, (1 - self.scaleRatio) + ratio * self.scaleRatio);
+        default:
+            break;
     }
 }
 
@@ -356,6 +372,16 @@ typedef void(^MXClickHandler)(NSInteger index);
 
 - (void)setHidePageControl:(BOOL)hidePageControl {
     self.pageControl.hidden = hidePageControl;
+}
+
+- (void)setScaleRatio:(CGFloat)scaleRatio {
+    if (scaleRatio < 0) {
+        _scaleRatio = 0;
+    } else if (scaleRatio > 0.9) {
+        _scaleRatio = 0.9;
+    } else {
+        _scaleRatio = scaleRatio;
+    }
 }
 
 /*

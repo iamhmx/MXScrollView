@@ -30,6 +30,8 @@ typedef void(^MXClickImageHandler)(NSInteger index);
 @property (assign, nonatomic) BOOL hidePageControl;
 //动画类型，默认无动画
 @property (assign, nonatomic) MXImageAnimation animationType;
+//缩放动画的缩放系数（0~0.9）
+@property (assign, nonatomic) CGFloat scaleRatio;
 
 /**
  初始化（用于事先不知道图片数据，一般图片数据有网络请求而来，先设置好视图，然后设置contents属性）

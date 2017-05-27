@@ -37,7 +37,8 @@
 typedef NS_ENUM(NSInteger, MXImageAnimation) {
     MXImageAnimationNone,
     MXImageAnimationFadeInOut,
-    MXImageAnimationRotation
+    MXImageAnimationRotation,
+    MXImageAnimationScale
 };
 
 #endif /* MXScrollViewHeader_h */
