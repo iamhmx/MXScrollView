@@ -8,6 +8,7 @@
 
 #import "MXScrollView.h"
 #import "UIImageView+WebCache.h"
+#import <Accelerate/Accelerate.h>
 
 typedef void(^MXClickHandler)(NSInteger index);
 
@@ -18,9 +19,11 @@ typedef void(^MXClickHandler)(NSInteger index);
 @property (copy, nonatomic) NSString *imageUrl;
 @property (strong, nonatomic) UIImage *placeholder;
 @property (copy, nonatomic) MXClickHandler handler;
-@property (strong, nonatomic) UIView *coverView;
 @property (assign, nonatomic) BOOL hideCover;
 @property (assign, nonatomic) CGFloat coverViewAlpha;
+@property (assign, nonatomic) BOOL hideBlur;
+@property (assign, nonatomic) CGFloat blurViewAlpha;
+@property (strong, nonatomic) UIVisualEffectView *blurImageView;
 @end
 
 @implementation MXImageView
@@ -35,10 +38,10 @@ typedef void(^MXClickHandler)(NSInteger index);
         [self.imageView sd_setImageWithURL:[NSURL URLWithString:url] placeholderImage:placeholder];
         [self addSubview:self.imageView];
         
-        self.coverView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
-        self.coverView.backgroundColor = [UIColor colorWithRed:170/255.0 green:170/255.0 blue:170/255.0 alpha:0.9];
-        self.coverView.alpha = 0;
-        [self.imageView addSubview:self.coverView];
+        self.blurImageView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleDark]];
+        self.blurImageView.frame = CGRectMake(0, 0, frame.size.width, frame.size.height);
+        self.blurImageView.alpha = 0;
+        [self.imageView addSubview:self.blurImageView];
         
         self.control = [[UIControl alloc]initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
         [self.control addTarget:self action:@selector(imageClickAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -48,11 +51,19 @@ typedef void(^MXClickHandler)(NSInteger index);
 }
 
 - (void)setHideCover:(BOOL)hideCover {
-    self.coverView.alpha = hideCover?0:1;
+    self.imageView.alpha = hideCover?0:1;
 }
 
 - (void)setCoverViewAlpha:(CGFloat)coverViewAlpha {
-    self.coverView.alpha = coverViewAlpha;
+    self.imageView.alpha = coverViewAlpha;
+}
+
+- (void)setHideBlur:(BOOL)hideBlur {
+    self.blurImageView.alpha = hideBlur?0:1;
+}
+
+- (void)setBlurViewAlpha:(CGFloat)blurViewAlpha {
+    self.blurImageView.alpha = blurViewAlpha;
 }
 
 - (void)setActionTag:(NSInteger)actionTag {
@@ -239,8 +250,8 @@ typedef void(^MXClickHandler)(NSInteger index);
         self.scrollView.contentOffset = CGPointMake((x+1)*self.width, 0);
         if (self.animationType == MXImageAnimationFadeInOut) {
             //自动滚动只需要考虑当前页和下一页
-            self.currentImage.hideCover = NO;
-            self.nextImage.hideCover = YES;
+            self.currentImage.hideCover = YES;
+            self.nextImage.hideCover = NO;
         } else if (self.animationType == MXImageAnimationRotation) {
             //自动滚动只需要考虑向左，逆时针方向
             self.currentImage.transform = CGAffineTransformMakeRotation(-M_PI_4);
@@ -266,8 +277,10 @@ typedef void(^MXClickHandler)(NSInteger index);
         }
         self.nextImage = self.imageViewArray[offX+1];
         if (self.animationType == MXImageAnimationFadeInOut) {
-            self.preImage.hideCover = self.nextImage.hideCover = NO;
-            self.currentImage.hideCover = YES;
+            //self.preImage.hideCover = self.nextImage.hideCover = NO;
+            //self.currentImage.hideCover = YES;
+            self.preImage.hideCover = self.nextImage.hideCover = YES;
+            self.currentImage.hideCover = NO;
         } else if (self.animationType == MXImageAnimationRotation) {
             [self.scrollView bringSubviewToFront:self.currentImage];
             self.currentImage.layer.shadowOffset = CGSizeMake(0, 0);
@@ -278,6 +291,14 @@ typedef void(^MXClickHandler)(NSInteger index);
         } else if (self.animationType == MXImageAnimationScale) {
             self.currentImage.transform = CGAffineTransformIdentity;
             self.preImage.transform = self.nextImage.transform = CGAffineTransformMakeScale(1 - self.scaleRatio, 1 - self.scaleRatio);
+        } else if (self.animationType == MXImageAnimationDown ||
+                   self.animationType == MXImageAnimationUp) {
+            self.currentImage.frame = CGRectMake(self.currentImage.frame.origin.x, 0, CGRectGetWidth(self.currentImage.frame), CGRectGetHeight(self.currentImage.frame));
+            self.preImage.frame = CGRectMake(self.preImage.frame.origin.x, 0, CGRectGetWidth(self.preImage.frame), CGRectGetHeight(self.preImage.frame));
+            self.nextImage.frame = CGRectMake(self.nextImage.frame.origin.x, 0, CGRectGetWidth(self.nextImage.frame), CGRectGetHeight(self.nextImage.frame));
+        } else if (self.animationType == MXImageAnimationBlur) {
+            self.preImage.hideBlur = self.nextImage.hideBlur = NO;
+            self.currentImage.hideBlur = YES;
         }
     }
 }
@@ -324,16 +345,32 @@ typedef void(^MXClickHandler)(NSInteger index);
     
     switch (self.animationType) {
         case MXImageAnimationFadeInOut:
-            self.currentImage.coverViewAlpha = ratio;
-            self.preImage.coverViewAlpha = self.nextImage.coverViewAlpha = 1-ratio;
+            self.currentImage.coverViewAlpha = 1 - ratio;
+            self.preImage.coverViewAlpha = self.nextImage.coverViewAlpha = ratio;
             break;
             
         case MXImageAnimationRotation:
             self.currentImage.transform = CGAffineTransformMakeRotation((self.scrollLeft?-1:1) * ratio * M_PI_4);
+            break;
             
         case MXImageAnimationScale:
             self.currentImage.transform = CGAffineTransformMakeScale(1 - ratio * self.scaleRatio, 1 - ratio * self.scaleRatio);
             self.preImage.transform = self.nextImage.transform = CGAffineTransformMakeScale((1 - self.scaleRatio) + ratio * self.scaleRatio, (1 - self.scaleRatio) + ratio * self.scaleRatio);
+            break;
+            
+        case MXImageAnimationUp:
+            self.currentImage.frame = CGRectMake(self.currentImage.frame.origin.x, -ratio * self.height, CGRectGetWidth(self.currentImage.frame), CGRectGetHeight(self.currentImage.frame));
+            break;
+            
+        case MXImageAnimationDown:
+            self.currentImage.frame = CGRectMake(self.currentImage.frame.origin.x, ratio * self.height, CGRectGetWidth(self.currentImage.frame), CGRectGetHeight(self.currentImage.frame));
+            break;
+            
+        case MXImageAnimationBlur:
+            self.currentImage.blurViewAlpha = ratio;
+            self.preImage.blurViewAlpha = self.nextImage.blurViewAlpha = 1-ratio;
+            break;
+            
         default:
             break;
     }

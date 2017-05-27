@@ -33,12 +33,19 @@
  - MXImageAnimationNone: 默认无动画
  - MXImageAnimationFadeInOut: 渐变
  - MXImageAnimationRotation: 旋转
+ - MXImageAnimationScale: 缩放
+ - MXImageAnimationDown: 下降
+ - MXImageAnimationUp: 上升
+ - MXImageAnimationBlur: 毛玻璃
  */
 typedef NS_ENUM(NSInteger, MXImageAnimation) {
     MXImageAnimationNone,
     MXImageAnimationFadeInOut,
     MXImageAnimationRotation,
-    MXImageAnimationScale
+    MXImageAnimationScale,
+    MXImageAnimationUp,
+    MXImageAnimationDown,
+    MXImageAnimationBlur
 };
 
 #endif /* MXScrollViewHeader_h */
