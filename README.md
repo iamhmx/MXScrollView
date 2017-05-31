@@ -56,20 +56,13 @@
     }];*/
 
     //设置动画类型
-    //渐变
-    //mxScrollView.animationType = MXImageAnimationFadeInOut;
-    
-    //旋转
-    mxScrollView.animationType = MXImageAnimationRotation;
-    
-    //缩放
-    //mxScrollView.animationType = MXImageAnimationScale;
-    //mxScrollView.scaleRatio = 0.5;
-    
-    //mxScrollView.animationType = MXImageAnimationUp;
-    
-    //mxScrollView.animationType = MXImageAnimationDown;
-    
+    //渐变 MXImageAnimationFadeInOut;
+    //旋转 MXImageAnimationRotation;
+    //缩放 MXImageAnimationScale;
+    //     mxScrollView.scaleRatio = 0.5;
+    //上升 MXImageAnimationUp;
+    //下降 MXImageAnimationDown;
+    //毛玻璃
     mxScrollView.animationType = MXImageAnimationBlur;
     
     //方法一：设置代理并实现方法
