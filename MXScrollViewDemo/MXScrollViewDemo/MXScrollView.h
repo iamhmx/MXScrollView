@@ -6,6 +6,10 @@
 //  Copyright © 2017年 yellow. All rights reserved.
 //
 
+/*
+ github:https://github.com/iamhmx
+ */
+
 #import <UIKit/UIKit.h>
 #import "MXScrollViewHeader.h"
 
