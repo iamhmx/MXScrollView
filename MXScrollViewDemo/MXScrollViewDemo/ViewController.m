@@ -54,6 +54,9 @@
         NSLog(@"图片index：%ld",index);
     };
     
+    //mxScrollView.pageIndicatorTintColor = [UIColor redColor];
+    //mxScrollView.currentPageIndicatorTintColor = [UIColor yellowColor];
+    
     [self.view addSubview:mxScrollView];
 }
 

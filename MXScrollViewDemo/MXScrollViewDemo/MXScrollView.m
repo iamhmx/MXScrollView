@@ -421,6 +421,14 @@ typedef void(^MXClickHandler)(NSInteger index);
     }
 }
 
+- (void)setPageIndicatorTintColor:(UIColor *)pageIndicatorTintColor {
+    self.pageControl.pageIndicatorTintColor = pageIndicatorTintColor;
+}
+
+- (void)setCurrentPageIndicatorTintColor:(UIColor *)currentPageIndicatorTintColor {
+    self.pageControl.currentPageIndicatorTintColor = currentPageIndicatorTintColor;
+}
+
 /*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.

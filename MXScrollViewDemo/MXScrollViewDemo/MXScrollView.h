@@ -24,7 +24,7 @@ typedef void(^MXClickImageHandler)(NSInteger index);
 
 @interface MXScrollView : UIView
 //图片内容
-@property (strong, nonatomic) NSArray <NSString*>*contents;
+@property (strong, nonatomic) NSArray <NSString*>* contents;
 //自动滚动间隔时间
 @property (assign, nonatomic) CGFloat delay;
 @property (weak, nonatomic)   id <MXScrollViewDelegate> delegate;
@@ -32,6 +32,9 @@ typedef void(^MXClickImageHandler)(NSInteger index);
 @property (copy, nonatomic)   MXClickImageHandler clickHandler;
 //是否显示pageControl，默认显示
 @property (assign, nonatomic) BOOL hidePageControl;
+//pageControl颜色
+@property (nonatomic, strong) UIColor *pageIndicatorTintColor;
+@property (nonatomic, strong) UIColor *currentPageIndicatorTintColor;
 //动画类型，默认无动画
 @property (assign, nonatomic) MXImageAnimation animationType;
 //缩放动画的缩放系数（0~0.9）
