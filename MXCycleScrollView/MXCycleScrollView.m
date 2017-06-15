@@ -7,6 +7,7 @@
 //
 
 #import "MXCycleScrollView.h"
+#import "UIImageView+WebCache.h"
 
 typedef void(^MXClickHandler)(NSInteger index);
 
