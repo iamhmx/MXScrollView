@@ -1,5 +1,5 @@
 //
-//  MXScrollView.h
+//  MXCycleScrollView.h
 //  MXScrollViewDemo
 //
 //  Created by msxf on 2017/5/24.
@@ -11,9 +11,9 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "MXScrollViewHeader.h"
+#import "MXCycleScrollViewHeader.h"
 
-@protocol MXScrollViewDelegate <NSObject>
+@protocol MXCycleScrollViewDelegate <NSObject>
 
 @optional
 - (void)clickImageIndex:(NSInteger)index;
@@ -22,12 +22,12 @@
 
 typedef void(^MXClickImageHandler)(NSInteger index);
 
-@interface MXScrollView : UIView
+@interface MXCycleScrollView : UIView
 //图片内容
 @property (strong, nonatomic) NSArray <NSString*>* contents;
 //自动滚动间隔时间
 @property (assign, nonatomic) CGFloat delay;
-@property (weak, nonatomic)   id <MXScrollViewDelegate> delegate;
+@property (weak, nonatomic)   id <MXCycleScrollViewDelegate> delegate;
 @property (strong, nonatomic) UIImage *placeholderImage;
 @property (copy, nonatomic)   MXClickImageHandler clickHandler;
 //是否显示pageControl，默认显示

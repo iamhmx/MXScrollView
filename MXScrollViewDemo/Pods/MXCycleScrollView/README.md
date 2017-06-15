@@ -1,6 +1,6 @@
 # MXScrollView
 循环滚动视图(支持点击事件、自动滚动、多种动画)
-## 效果图
+## 效果示例
 * 无动画<br>
    ![无动画](https://github.com/iamhmx/MXScrollView/blob/master/MXScrollViewDemo/screenshots/none.gif)
    <br>
@@ -29,16 +29,14 @@
    ![毛玻璃](https://github.com/iamhmx/MXScrollView/blob/master/MXScrollViewDemo/screenshots/blur.gif)
    <br>   
 ## 使用说明
-* Cocoapods安装
-    * pod 'MXCycleScrollView'
 * 添加文件
-    * 将MXCycleScrollView文件夹（包含MXCycleScrollViewHeader.h、MXCycleScrollView.h、MXCycleScrollView.m）添加到项目中
-## 代码示例
+    * 将MXScrollViewHeader.h、MXScrollView.h、MXScrollView.m添加到项目中
+* 添加代码
 ```objc
 /*ViewController.m*/
-#import "MXCycleScrollView.h"
+#import "MXScrollView.h"
 
-@interface ViewController ()<MXCycleScrollViewDelegate>
+@interface ViewController ()<MXScrollViewDelegate>
 //图片数据
 @property (strong, nonatomic) NSArray *imageUrls;
 @end
@@ -48,10 +46,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     /*初始化一：已知图片数据*/
-    MXCycleScrollView *mxScrollView = [[MXCycleScrollView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 200) withContents:self.imageUrls andScrollDelay:3.5];
+    MXScrollView *mxScrollView = [[MXScrollView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 200) withContents:self.imageUrls andScrollDelay:3.5];
 
     /*初始化二：不知图片数据，数据由网络请求而来，更常见*/
-    /*MXCycleScrollView *mxScrollView = [[MXCycleScrollView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 200) withScrollDelay:3.5];
+    /*MXScrollView *mxScrollView = [[MXScrollView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 200) withScrollDelay:3.5];
     //请求到数据，设置图片
     [self requestDataFromNet:^(id data) {
         [mxScrollView setContents:data];

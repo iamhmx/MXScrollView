@@ -7,9 +7,9 @@
 //
 
 #import "ViewController.h"
-#import "MXScrollView.h"
+#import "MXCycleScrollView.h"
 
-@interface ViewController ()<MXScrollViewDelegate>
+@interface ViewController ()<MXCycleScrollViewDelegate>
 @property (strong, nonatomic) NSArray *imageUrls;
 @end
 
@@ -20,10 +20,10 @@
     self.view.backgroundColor = [UIColor lightGrayColor];
     
     /*初始化一：已知图片数据*/
-    MXScrollView *mxScrollView = [[MXScrollView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 200) withContents:self.imageUrls andScrollDelay:3.5];
+    MXCycleScrollView *mxScrollView = [[MXCycleScrollView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 200) withContents:self.imageUrls andScrollDelay:3.5];
     
     /*初始化二：不知图片数据，数据由网络请求而来，更常见*/
-    /*MXScrollView *mxScrollView = [[MXScrollView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 200) withScrollDelay:3.5];
+    /*MXCycleScrollView *mxScrollView = [[MXCycleScrollView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 200) withScrollDelay:3.5];
     //请求到数据，设置图片
     [self requestDataFromNet:^(id data) {
         [mxScrollView setContents:data];

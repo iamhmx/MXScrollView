@@ -1,14 +1,13 @@
 //
-//  MXScrollView.m
+//  MXCycleScrollView.m
 //  MXScrollViewDemo
 //
 //  Created by msxf on 2017/5/24.
 //  Copyright © 2017年 yellow. All rights reserved.
 //
 
-#import "MXScrollView.h"
+#import "MXCycleScrollView.h"
 #import "UIImageView+WebCache.h"
-#import <Accelerate/Accelerate.h>
 
 typedef void(^MXClickHandler)(NSInteger index);
 
@@ -82,7 +81,7 @@ typedef void(^MXClickHandler)(NSInteger index);
 
 @end
 
-@interface MXScrollView ()<UIScrollViewDelegate>
+@interface MXCycleScrollView ()<UIScrollViewDelegate>
 @property (strong, nonatomic) UIScrollView *scrollView;
 @property (strong, nonatomic) UIPageControl *pageControl;
 @property (assign, nonatomic) CGRect contentRect;
@@ -107,7 +106,7 @@ typedef void(^MXClickHandler)(NSInteger index);
 @property (assign, nonatomic) CGFloat height;
 @end
 
-@implementation MXScrollView
+@implementation MXCycleScrollView
 
 - (instancetype)initWithFrame:(CGRect)frame withScrollDelay:(CGFloat)delay {
     if (self = [super initWithFrame:frame]) {
@@ -119,7 +118,7 @@ typedef void(^MXClickHandler)(NSInteger index);
 }
 
 - (instancetype)initWithFrame:(CGRect)frame withContents:(NSArray<NSString*>*)contents andScrollDelay:(CGFloat)delay {
-    MXScrollView *view = [[MXScrollView alloc]initWithFrame:frame withScrollDelay:delay];
+    MXCycleScrollView *view = [[MXCycleScrollView alloc]initWithFrame:frame withScrollDelay:delay];
     view.mImageArray = [[NSMutableArray alloc] initWithArray:contents];
     [view initContents];
     return view;

@@ -13,7 +13,6 @@
 		901A83531ED5810B00F5F47E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 901A83511ED5810B00F5F47E /* Main.storyboard */; };
 		901A83551ED5810B00F5F47E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 901A83541ED5810B00F5F47E /* Assets.xcassets */; };
 		901A83581ED5810B00F5F47E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 901A83561ED5810B00F5F47E /* LaunchScreen.storyboard */; };
-		901A83611ED5816C00F5F47E /* MXScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 901A83601ED5816C00F5F47E /* MXScrollView.m */; };
 		ED13274A26E0CD25E9C08CD8 /* libPods-MXScrollViewDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F73EADCD8D9315BA4EF6A34 /* libPods-MXScrollViewDemo.a */; };
 /* End PBXBuildFile section */
 
@@ -29,9 +28,6 @@
 		901A83541ED5810B00F5F47E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		901A83571ED5810B00F5F47E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		901A83591ED5810B00F5F47E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		901A835F1ED5816C00F5F47E /* MXScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXScrollView.h; sourceTree = "<group>"; };
-		901A83601ED5816C00F5F47E /* MXScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MXScrollView.m; sourceTree = "<group>"; };
-		901A83641ED5852300F5F47E /* MXScrollViewHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MXScrollViewHeader.h; sourceTree = "<group>"; };
 		CFE60D310D8CB516AB6C2AEF /* Pods-MXScrollViewDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MXScrollViewDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-MXScrollViewDemo/Pods-MXScrollViewDemo.release.xcconfig"; sourceTree = "<group>"; };
 		D77F908D806651860A79135C /* Pods-MXScrollViewDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MXScrollViewDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MXScrollViewDemo/Pods-MXScrollViewDemo.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -86,9 +82,6 @@
 		901A83471ED5810B00F5F47E /* MXScrollViewDemo */ = {
 			isa = PBXGroup;
 			children = (
-				901A83641ED5852300F5F47E /* MXScrollViewHeader.h */,
-				901A835F1ED5816C00F5F47E /* MXScrollView.h */,
-				901A83601ED5816C00F5F47E /* MXScrollView.m */,
 				901A834B1ED5810B00F5F47E /* AppDelegate.h */,
 				901A834C1ED5810B00F5F47E /* AppDelegate.m */,
 				901A834E1ED5810B00F5F47E /* ViewController.h */,
@@ -233,7 +226,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				901A83611ED5816C00F5F47E /* MXScrollView.m in Sources */,
 				901A83501ED5810B00F5F47E /* ViewController.m in Sources */,
 				901A834D1ED5810B00F5F47E /* AppDelegate.m in Sources */,
 				901A834A1ED5810B00F5F47E /* main.m in Sources */,

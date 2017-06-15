@@ -1,13 +1,13 @@
 //
-//  MXScrollViewHeader.h
+//  MXCycleScrollViewHeader.h
 //  MXScrollViewDemo
 //
 //  Created by msxf on 2017/5/24.
 //  Copyright © 2017年 yellow. All rights reserved.
 //
 
-#ifndef MXScrollViewHeader_h
-#define MXScrollViewHeader_h
+#ifndef MXCycleScrollViewHeader_h
+#define MXCycleScrollViewHeader_h
 
 #ifndef kScreenWidth
 #define kScreenWidth  ([[UIScreen mainScreen] bounds].size.width)

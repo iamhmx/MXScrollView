@@ -1,14 +1,17 @@
 PODS:
+  - MXCycleScrollView (1.5.1):
+    - SDWebImage
   - SDWebImage (4.0.0):
     - SDWebImage/Core (= 4.0.0)
   - SDWebImage/Core (4.0.0)
 
 DEPENDENCIES:
-  - SDWebImage
+  - MXCycleScrollView
 
 SPEC CHECKSUMS:
+  MXCycleScrollView: 72e9326ac005fa13b2e3d3d8af4a2e2ae8c74c91
   SDWebImage: 76a6348bdc74eb5a55dd08a091ef298e56b55e41
 
-PODFILE CHECKSUM: 13d586df9a0decbbb13fcd49c87d30ee96300c58
+PODFILE CHECKSUM: ee33c466ffaf81d9238923c68dc6a3f6d23d05e7
 
 COCOAPODS: 1.2.1
