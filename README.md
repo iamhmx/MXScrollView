@@ -1,4 +1,4 @@
-# MXScrollView
+# MXCycleScrollView
 循环滚动视图(支持点击事件、自动滚动、多种动画)
 ## 效果图
 * 无动画<br>
