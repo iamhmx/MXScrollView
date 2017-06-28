@@ -13,6 +13,14 @@
 #import <UIKit/UIKit.h>
 #import "MXCycleScrollViewHeader.h"
 
+/**
+ 图片和文字模型
+ */
+@interface MXImageModel : NSObject
+@property (copy, nonatomic) NSString *imageUrl;
+@property (copy, nonatomic) NSString *imageText;
+@end
+
 @protocol MXCycleScrollViewDelegate <NSObject>
 
 @optional
@@ -23,8 +31,8 @@
 typedef void(^MXClickImageHandler)(NSInteger index);
 
 @interface MXCycleScrollView : UIView
-//图片内容
-@property (strong, nonatomic) NSArray <NSString*>* contents;
+//图片&文字内容
+@property (strong, nonatomic) NSArray <MXImageModel*>* contents;
 //自动滚动间隔时间
 @property (assign, nonatomic) CGFloat delay;
 @property (weak, nonatomic)   id <MXCycleScrollViewDelegate> delegate;
@@ -35,6 +43,8 @@ typedef void(^MXClickImageHandler)(NSInteger index);
 //pageControl颜色
 @property (nonatomic, strong) UIColor *pageIndicatorTintColor;
 @property (nonatomic, strong) UIColor *currentPageIndicatorTintColor;
+//显示文字
+@property (assign, nonatomic) BOOL showText;
 //动画类型，默认无动画
 @property (assign, nonatomic) MXImageAnimation animationType;
 //缩放动画的缩放系数（0~0.9）
@@ -57,6 +67,6 @@ typedef void(^MXClickImageHandler)(NSInteger index);
  @param delay 自动滚动间隔时间
  @return self
  */
-- (instancetype)initWithFrame:(CGRect)frame withContents:(NSArray<NSString*>*)contents andScrollDelay:(CGFloat)delay;
+- (instancetype)initWithFrame:(CGRect)frame withContents:(NSArray<MXImageModel*>*)contents andScrollDelay:(CGFloat)delay;
 
 @end
