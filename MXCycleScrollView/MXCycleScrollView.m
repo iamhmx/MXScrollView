@@ -365,11 +365,11 @@ typedef void(^MXClickHandler)(NSInteger index);
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    NSLog(@"last = %ld, offset = %ld", self.lastX, (NSInteger)scrollView.contentOffset.x);
+    NSLog(@"last = %ld, offset = %ld", (long)self.lastX, (long)scrollView.contentOffset.x);
     //相对于上次contentOffset.x的滚动距离（0~self.width）
     NSInteger scrollDistance = labs(self.lastX - (NSInteger)scrollView.contentOffset.x);
     scrollDistance = MIN(scrollDistance, self.width);
-    NSLog(@"scrollDistance = %ld",scrollDistance);
+    NSLog(@"scrollDistance = %ld", (long)scrollDistance);
     
     CGFloat ratio = scrollDistance / self.width;
     NSLog(@"ratio = %.1f",ratio);
