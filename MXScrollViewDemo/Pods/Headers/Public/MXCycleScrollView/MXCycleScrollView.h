@@ -1,1 +1,0 @@
-../../../MXCycleScrollView/MXCycleScrollView/MXCycleScrollView.h
