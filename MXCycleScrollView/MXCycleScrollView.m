@@ -8,6 +8,7 @@
 
 #import "MXCycleScrollView.h"
 #import "UIImageView+WebCache.h"
+#import "MXPageControlView.h"
 
 @implementation MXImageModel
 
@@ -87,9 +88,10 @@ typedef void(^MXClickHandler)(NSInteger index);
 
 @interface MXCycleScrollView ()<UIScrollViewDelegate>
 @property (strong, nonatomic) UIScrollView *scrollView;
-@property (strong, nonatomic) UIView *pageControlView;
-@property (strong, nonatomic) UIPageControl *pageControl;
-@property (strong, nonatomic) UILabel *pageControlTextLabel;
+//@property (strong, nonatomic) UIView *pageControlView;
+//@property (strong, nonatomic) UIPageControl *pageControl;
+//@property (strong, nonatomic) UILabel *pageControlTextLabel;
+@property (strong, nonatomic) MXPageControlView *pageControlView;
 @property (assign, nonatomic) CGRect contentRect;
 @property (assign, nonatomic) NSUInteger originalImageCount;
 @property (assign, nonatomic) NSInteger imageCount;
@@ -143,13 +145,18 @@ typedef void(^MXClickHandler)(NSInteger index);
     self.scrollView.delegate = self;
     [self addSubview:self.scrollView];
     
-    self.pageControlView = [[UIView alloc]initWithFrame:CGRectMake(0, self.height-MXPageControlHeight, kScreenWidth, MXPageControlHeight)];
+    /*self.pageControlView = [[UIView alloc]initWithFrame:CGRectMake(0, self.height-MXPageControlHeight, kScreenWidth, MXPageControlHeight)];
     [self addSubview:self.pageControlView];
     
     self.pageControl = [[UIPageControl alloc]initWithFrame:CGRectMake(0, 0, kScreenWidth, MXPageControlHeight)];
     self.pageControl.hidesForSinglePage = YES;
     [self.pageControlView addSubview:self.pageControl];
-    [self.pageControl sizeForNumberOfPages:6];
+    [self.pageControl sizeForNumberOfPages:6];*/
+    
+    self.pageControlView = [[MXPageControlView alloc]initWithFrame:CGRectMake(0, self.height-MXPageControlHeight, kScreenWidth, MXPageControlHeight)];
+    //self.pageControlView.dotWidth = 5;
+    //self.pageControlView.dotMargin = 5;
+    [self addSubview:_pageControlView];
 }
 
 - (void)setContents:(NSArray <NSString*>*)contents {
@@ -169,7 +176,7 @@ typedef void(^MXClickHandler)(NSInteger index);
 }
 
 - (void)initData {
-    self.pageControl.numberOfPages = self.mImageArray.count;
+    self.pageControlView.numberOfPages = self.mImageArray.count;
     self.originalImageCount = self.mImageArray.count;
     if (self.mImageArray.count > 1) {
         //这里在最开始和最后多加一张图片，做循环滚动
@@ -279,9 +286,9 @@ typedef void(^MXClickHandler)(NSInteger index);
         }
     } completion:^(BOOL finished) {
         @MXStrongObj(self);
-        self.pageControl.currentPage = page + 1;
+        self.pageControlView.currentPage = page + 1;
         if (self.showText) {
-            self.pageControlTextLabel.text = self.imageModelArray[self.pageControl.currentPage].imageText;
+            self.pageControlView.text = self.imageModelArray[self.pageControlView.currentPage].imageText;
         }
         //衔接自动滚动后手动滑动
         self.lastX = self.scrollView.contentOffset.x;
@@ -337,9 +344,9 @@ typedef void(^MXClickHandler)(NSInteger index);
         scrollView.contentOffset = CGPointMake(self.width, 0);
         page = 0;
     }
-    self.pageControl.currentPage = page;
+    self.pageControlView.currentPage = page;
     if (self.showText) {
-        self.pageControlTextLabel.text = self.imageModelArray[page].imageText;
+        self.pageControlView.text = self.imageModelArray[page].imageText;
     }
     self.lastX = scrollView.contentOffset.x;
     [self resetThreeImages];
@@ -424,20 +431,9 @@ typedef void(^MXClickHandler)(NSInteger index);
 #pragma mark setter
 - (void)setShowText:(BOOL)showText {
     _showText = showText;
+    self.pageControlView.showText = showText;
     if (showText) {
-        self.pageControlView.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.5];
-        self.pageControlTextLabel.hidden = NO;
-        self.pageControlTextLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, CGRectGetWidth(self.pageControlView.frame)-105, CGRectGetHeight(self.pageControlView.frame))];
-        self.pageControlTextLabel.font = [UIFont systemFontOfSize:13];
-        self.pageControlTextLabel.textColor = [UIColor whiteColor];
-        self.pageControlTextLabel.text = self.imageModelArray[0].imageText;
-        [self.pageControlView addSubview:self.pageControlTextLabel];
-        
-        self.pageControl.frame = CGRectMake(CGRectGetWidth(self.pageControlView.frame)-100, 0, 100, CGRectGetHeight(self.pageControlView.frame));
-    } else {
-        self.pageControlView.backgroundColor = [UIColor clearColor];
-        self.pageControlTextLabel.hidden = YES;
-        self.pageControl.frame = CGRectMake(0, 0, CGRectGetWidth(self.pageControlView.frame), CGRectGetHeight(self.pageControlView.frame));
+        self.pageControlView.firstText = self.imageModelArray.firstObject.imageText;
     }
 }
 
@@ -451,7 +447,7 @@ typedef void(^MXClickHandler)(NSInteger index);
 }
 
 - (void)setHidePageControl:(BOOL)hidePageControl {
-    self.pageControl.hidden = hidePageControl;
+    self.pageControlView.hidden = hidePageControl;
 }
 
 - (void)setScaleRatio:(CGFloat)scaleRatio {
@@ -465,11 +461,11 @@ typedef void(^MXClickHandler)(NSInteger index);
 }
 
 - (void)setPageIndicatorTintColor:(UIColor *)pageIndicatorTintColor {
-    self.pageControl.pageIndicatorTintColor = pageIndicatorTintColor;
+    self.pageControlView.pageIndicatorTintColor = pageIndicatorTintColor;
 }
 
 - (void)setCurrentPageIndicatorTintColor:(UIColor *)currentPageIndicatorTintColor {
-    self.pageControl.currentPageIndicatorTintColor = currentPageIndicatorTintColor;
+    self.pageControlView.currentPageIndicatorTintColor = currentPageIndicatorTintColor;
 }
 
 /*
