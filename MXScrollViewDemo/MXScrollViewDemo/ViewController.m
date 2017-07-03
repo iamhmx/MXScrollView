@@ -59,6 +59,8 @@
     
     //mxScrollView.pageIndicatorTintColor = [UIColor redColor];
     //mxScrollView.currentPageIndicatorTintColor = [UIColor yellowColor];
+    mxScrollView.pageControlDotWidth = 5;
+    mxScrollView.pageControlDotMargin = 5;
     
     [self.view addSubview:mxScrollView];
 }

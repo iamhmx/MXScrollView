@@ -43,6 +43,10 @@ typedef void(^MXClickImageHandler)(NSInteger index);
 //pageControl颜色
 @property (nonatomic, strong) UIColor *pageIndicatorTintColor;
 @property (nonatomic, strong) UIColor *currentPageIndicatorTintColor;
+//pageControl圆点大小
+@property (assign, nonatomic) CGFloat pageControlDotWidth;
+//pageControl圆点间距
+@property (assign, nonatomic) CGFloat pageControlDotMargin;
 //显示文字
 @property (assign, nonatomic) BOOL showText;
 //动画类型，默认无动画

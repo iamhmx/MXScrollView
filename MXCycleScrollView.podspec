@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "MXCycleScrollView"
-  s.version      = "1.5.4"
+  s.version      = "1.5.5"
   s.summary      = "循环滚动视图"
 
   # This description is used to generate tags and improve search results.

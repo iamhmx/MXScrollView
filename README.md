@@ -1,5 +1,9 @@
 # MXCycleScrollView
-循环滚动视图(支持点击事件、自动滚动、多种动画)
+循环滚动视图
+1、支持点击事件（block、代理）
+2、支持自动滚动（自定义间隔时间）
+3、支持多种动画
+4、支持图片文字显示
 ## 效果图
 * 无动画<br>
    ![无动画](https://github.com/iamhmx/MXScrollView/blob/master/MXScrollViewDemo/screenshots/none.gif)
@@ -81,6 +85,11 @@
     mxScrollView.clickHandler = ^(NSInteger index) {
         NSLog(@"图片index：%ld",index);
     };
+
+    //mxScrollView.pageIndicatorTintColor = [UIColor redColor];
+    //mxScrollView.currentPageIndicatorTintColor = [UIColor yellowColor];
+    mxScrollView.pageControlDotWidth = 5;
+    mxScrollView.pageControlDotMargin = 5;
     
     [self.view addSubview:mxScrollView];
 }

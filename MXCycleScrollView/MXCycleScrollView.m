@@ -468,6 +468,14 @@ typedef void(^MXClickHandler)(NSInteger index);
     self.pageControlView.currentPageIndicatorTintColor = currentPageIndicatorTintColor;
 }
 
+- (void)setPageControlDotWidth:(CGFloat)pageControlDotWidth {
+    self.pageControlView.dotWidth = pageControlDotWidth;
+}
+
+- (void)setPageControlDotMargin:(CGFloat)pageControlDotMargin {
+    self.pageControlView.dotMargin = pageControlDotMargin;
+}
+
 /*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
