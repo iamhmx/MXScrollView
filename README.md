@@ -1,9 +1,9 @@
 # MXCycleScrollView
 循环滚动视图
-1、支持点击事件（block、代理）
-2、支持自动滚动（自定义间隔时间）
-3、支持多种动画
-4、支持图片文字显示
+* 支持点击事件（block、代理）
+* 支持自动滚动（自定义间隔时间）
+* 支持多种动画
+* 支持图片文字显示
 ## 效果图
 * 无动画<br>
    ![无动画](https://github.com/iamhmx/MXScrollView/blob/master/MXScrollViewDemo/screenshots/none.gif)
