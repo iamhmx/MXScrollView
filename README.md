@@ -40,7 +40,7 @@
 * Cocoapods安装
     * pod 'MXCycleScrollView'
 * 添加文件
-    * 将MXCycleScrollView文件夹（包含MXCycleScrollViewHeader.h、MXCycleScrollView.h、MXCycleScrollView.m）添加到项目中
+    * 将MXCycleScrollView文件夹添加到项目中
 ## 代码示例
 ```objc
 /*ViewController.m*/

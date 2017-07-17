@@ -28,6 +28,9 @@ typedef void(^MXClickHandler)(NSInteger index);
 @property (assign, nonatomic) BOOL hideBlur;
 @property (assign, nonatomic) CGFloat blurViewAlpha;
 @property (strong, nonatomic) UIVisualEffectView *blurImageView;
+
+- (void)addBlurImage;
+
 @end
 
 @implementation MXImageView
@@ -42,16 +45,20 @@ typedef void(^MXClickHandler)(NSInteger index);
         [self.imageView sd_setImageWithURL:[NSURL URLWithString:url] placeholderImage:placeholder];
         [self addSubview:self.imageView];
         
-        self.blurImageView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleDark]];
-        self.blurImageView.frame = CGRectMake(0, 0, frame.size.width, frame.size.height);
-        self.blurImageView.alpha = 0;
-        [self.imageView addSubview:self.blurImageView];
-        
         self.control = [[UIControl alloc]initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
         [self.control addTarget:self action:@selector(imageClickAction:) forControlEvents:UIControlEventTouchUpInside];
         [self.imageView addSubview:self.control];
     }
     return self;
+}
+
+- (void)addBlurImage {
+    self.blurImageView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleDark]];
+    self.blurImageView.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
+    self.blurImageView.alpha = 0;
+    [self.imageView addSubview:self.blurImageView];
+    
+    [self.imageView bringSubviewToFront:self.control];
 }
 
 - (void)setHideCover:(BOOL)hideCover {
@@ -88,9 +95,6 @@ typedef void(^MXClickHandler)(NSInteger index);
 
 @interface MXCycleScrollView ()<UIScrollViewDelegate>
 @property (strong, nonatomic) UIScrollView *scrollView;
-//@property (strong, nonatomic) UIView *pageControlView;
-//@property (strong, nonatomic) UIPageControl *pageControl;
-//@property (strong, nonatomic) UILabel *pageControlTextLabel;
 @property (strong, nonatomic) MXPageControlView *pageControlView;
 @property (assign, nonatomic) CGRect contentRect;
 @property (assign, nonatomic) NSUInteger originalImageCount;
@@ -100,7 +104,7 @@ typedef void(^MXClickHandler)(NSInteger index);
 @property (assign, nonatomic) BOOL manual;
 @property (strong, nonatomic) NSMutableArray <MXImageModel*>*imageModelArray;
 @property (strong, nonatomic) NSMutableArray <NSString*>*mImageArray;
-@property (strong, nonatomic) NSMutableArray *imageViewArray;
+@property (strong, nonatomic) NSMutableArray <MXImageView*>*imageViewArray;
 @property (strong, nonatomic) MXImageView *currentImage;
 @property (strong, nonatomic) MXImageView *preImage;
 @property (strong, nonatomic) MXImageView *nextImage;
@@ -145,17 +149,7 @@ typedef void(^MXClickHandler)(NSInteger index);
     self.scrollView.delegate = self;
     [self addSubview:self.scrollView];
     
-    /*self.pageControlView = [[UIView alloc]initWithFrame:CGRectMake(0, self.height-MXPageControlHeight, kScreenWidth, MXPageControlHeight)];
-    [self addSubview:self.pageControlView];
-    
-    self.pageControl = [[UIPageControl alloc]initWithFrame:CGRectMake(0, 0, kScreenWidth, MXPageControlHeight)];
-    self.pageControl.hidesForSinglePage = YES;
-    [self.pageControlView addSubview:self.pageControl];
-    [self.pageControl sizeForNumberOfPages:6];*/
-    
     self.pageControlView = [[MXPageControlView alloc]initWithFrame:CGRectMake(0, self.height-MXPageControlHeight, kScreenWidth, MXPageControlHeight)];
-    //self.pageControlView.dotWidth = 5;
-    //self.pageControlView.dotMargin = 5;
     [self addSubview:_pageControlView];
 }
 
@@ -305,8 +299,6 @@ typedef void(^MXClickHandler)(NSInteger index);
         }
         self.nextImage = self.imageViewArray[offX+1];
         if (self.animationType == MXImageAnimationFadeInOut) {
-            //self.preImage.hideCover = self.nextImage.hideCover = NO;
-            //self.currentImage.hideCover = YES;
             self.preImage.hideCover = self.nextImage.hideCover = YES;
             self.currentImage.hideCover = NO;
         } else if (self.animationType == MXImageAnimationRotation) {
@@ -439,6 +431,9 @@ typedef void(^MXClickHandler)(NSInteger index);
 
 - (void)setAnimationType:(MXImageAnimation)animationType {
     _animationType = animationType;
+    for (MXImageView *imageView in self.imageViewArray) {
+        [imageView addBlurImage];
+    }
     [self resetThreeImages];
 }
 

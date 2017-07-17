@@ -31,27 +31,60 @@
 typedef void(^MXClickImageHandler)(NSInteger index);
 
 @interface MXCycleScrollView : UIView
-//图片&文字内容
-@property (strong, nonatomic) NSArray <MXImageModel*>* contents;
-//自动滚动间隔时间
-@property (assign, nonatomic) CGFloat delay;
+
 @property (weak, nonatomic)   id <MXCycleScrollViewDelegate> delegate;
-@property (strong, nonatomic) UIImage *placeholderImage;
+
 @property (copy, nonatomic)   MXClickImageHandler clickHandler;
-//是否显示pageControl，默认显示
+
+/**
+ 图片&文字内容
+ */
+@property (strong, nonatomic) NSArray <MXImageModel*>* contents;
+
+/**
+ 自动滚动间隔时间
+ */
+@property (assign, nonatomic) CGFloat delay;
+
+/**
+ 图片加载失败显示图片，默认为nil
+ */
+@property (strong, nonatomic) UIImage *placeholderImage;
+
+/**
+ 是否显示pageControl，默认为YES
+ */
 @property (assign, nonatomic) BOOL hidePageControl;
-//pageControl颜色
+
+/**
+ pageControl颜色
+ */
 @property (nonatomic, strong) UIColor *pageIndicatorTintColor;
 @property (nonatomic, strong) UIColor *currentPageIndicatorTintColor;
-//pageControl圆点大小
+
+/**
+ pageControl圆点大小
+ */
 @property (assign, nonatomic) CGFloat pageControlDotWidth;
-//pageControl圆点间距
+
+/**
+ pageControl圆点间距
+ */
 @property (assign, nonatomic) CGFloat pageControlDotMargin;
-//显示文字
+
+/**
+ 是否显示文字，默认为NO
+ */
 @property (assign, nonatomic) BOOL showText;
-//动画类型，默认无动画
+
+/**
+ 动画类型，默认无动画
+ */
 @property (assign, nonatomic) MXImageAnimation animationType;
-//缩放动画的缩放系数（0~0.9）
+
+/**
+ 缩放动画的缩放系数（0~0.9）
+ */
 @property (assign, nonatomic) CGFloat scaleRatio;
 
 /**
