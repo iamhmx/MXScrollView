@@ -352,7 +352,7 @@
 				DEVELOPMENT_TEAM = 3GZ2MLR74W;
 				INFOPLIST_FILE = MXScrollViewDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.msxf.MXScrollViewDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yellow.MXScrollViewDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -365,7 +365,7 @@
 				DEVELOPMENT_TEAM = 3GZ2MLR74W;
 				INFOPLIST_FILE = MXScrollViewDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.msxf.MXScrollViewDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yellow.MXScrollViewDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

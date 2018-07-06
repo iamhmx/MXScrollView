@@ -2,7 +2,7 @@
 //  ViewController.m
 //  MXScrollViewDemo
 //
-//  Created by msxf on 2017/5/24.
+//  Created by yellow on 2017/5/24.
 //  Copyright © 2017年 yellow. All rights reserved.
 //
 
